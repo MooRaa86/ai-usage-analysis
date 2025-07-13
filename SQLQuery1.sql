@@ -1,0 +1,62 @@
+
+-- 1. Show all records in the dataset
+select * from ai_usage;
+
+-- 2. Get the unique types of tasks students use the AI for
+select distinct tasktype from ai_usage;
+
+-- 3. Retrieve sessions by graduate students in the Computer Science discipline
+select * from ai_usage where StudentLevel = 'graduate' and Discipline = 'computer science';
+
+-- 4. Find sessions that lasted more than 30 minutes
+select * from ai_usage where SessionLengthMin > 30;
+
+-- 5. Find sessions where the AI assistance level was greater than 4 (very helpful)
+select * from ai_usage where AI_AssistanceLevel > 4;
+
+-- 6. Get sessions where the outcome was "idea drafted"
+select * from ai_usage where FinalOutcome = 'idea drafted';
+
+-- 7. Count how many sessions were conducted per task type
+select tasktype,count(*) as taskcount from ai_usage group by tasktype;
+
+-- 8. Calculate the average session length by student level
+select StudentLevel,avg(SessionLengthMin) as avgSessionTime from ai_usage group by StudentLevel;
+
+-- 9. Count how many users reused the AI assistant
+select count(*) as reusedSessions from ai_usage where UsedAgain = 1;
+
+-- 10. Find the maximum and minimum satisfaction rating across all sessions
+select max(SatisfactionRating) as maxRate,min(SatisfactionRating) as minRate from ai_usage;
+
+-- 11. Get all sessions sorted by satisfaction rating in descending order
+select * from ai_usage order by SatisfactionRating desc;
+
+-- 12. Count sessions by academic discipline
+select Discipline,count(*) as sessionCount from ai_usage 
+group by Discipline;
+
+-- 13. Calculate the average number of prompts per task type
+select TaskType,avg(TotalPrompts) as avgPrompts from ai_usage
+group by TaskType;
+
+-- 14. Get sessions that lasted between 10 and 20 minutes
+select * from ai_usage where SessionLengthMin between 10 and 20;
+
+-- 15. Find users who were dissatisfied (rating < 2) and didn’t return to use the tool again
+select * from ai_usage where SatisfactionRating < 2 and UsedAgain = 0; 
+
+-- 16. Calculate the percentage of sessions that ended with "assignment completed"
+select count(*) * 100 /
+(select count(*) from ai_usage) as completionRate from ai_usage
+where FinalOutcome = 'assignment completed';
+
+-- 17. Get the top 2 most common task types
+select top 2 TaskType,count(*) as frequency from ai_usage
+group by TaskType
+order by frequency desc;
+
+-- 18. Find which disciplines have the highest average AI assistance level
+select Discipline, avg(AI_AssistanceLevel) as avgAiAssistance from ai_usage
+group by discipline 
+order by avgAiAssistance desc;
