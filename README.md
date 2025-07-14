@@ -1,56 +1,192 @@
-# 📊 AI Assistant Usage Analysis by Students
+#  AI Assistant Usage Behavior Analysis 
 
-## 🗂️ Dataset Overview  
-I analyzed a dataset containing **10,000+ sessions** of students using an AI assistant for academic purposes. Each row in the dataset represents one session, capturing how students interacted with the AI tool across different tasks and disciplines.
-
----
-
-## 📋 Data Columns  
-Key columns included in the dataset:
-
-- `StudentLevel`: Whether the student is undergraduate or graduate  
-- `Discipline`: The academic field (e.g., Computer Science, Psychology, etc.)  
-- `TaskType`: Type of academic task (e.g., writing, coding, brainstorming)  
-- `SessionLengthMin`: Duration of the session in minutes  
-- `TotalPrompts`: Number of prompts exchanged with the AI  
-- `AI_AssistanceLevel`: How helpful the AI was rated (1–5)  
-- `FinalOutcome`: What was achieved during the session (e.g., idea drafted, assignment completed)  
-- `SatisfactionRating`: User satisfaction with the session (1–5)  
-- `UsedAgain`: Whether the student returned to use the tool again
+## 👨‍💻 Project by: Omar Medhat 
 
 ---
 
-## 🧠 SQL Techniques Used  
-To explore the data and extract meaningful insights, I used a variety of SQL techniques:
+## 🎯 Problem Statement
 
-- `SELECT`, `WHERE`, and `DISTINCT` to explore and filter records  
-- `GROUP BY` with `COUNT` and `AVG` to summarize data  
-- `ORDER BY` to rank sessions based on satisfaction and usage  
-- `BETWEEN`, `TOP`, and logical conditions to focus on specific data ranges  
-- `Subqueries` to calculate overall percentages (e.g., assignment completion rate)
+The company owner gave me access to a dataset containing more than **10,000 recorded sessions** of students using an AI assistant for academic purposes. My mission was to analyze how students interacted with the AI and answer specific business-related questions using SQL.
 
----
+The aim was to:
 
-## 📈 Insights We Gained from the Analysis  
-
-The SQL analysis helped uncover several key findings:
-
-- **Writing and brainstorming** were the most common task types where students used the AI.
-- **Graduate students in Computer Science** showed high engagement and satisfaction levels.
-- **Longer sessions (over 30 minutes)** indicated deeper academic tasks and focused usage.
-- **Psychology and Business students** reported the highest average AI assistance levels.
-- A significant percentage of sessions ended with **“assignment completed”**, proving the AI’s usefulness.
-- Students who were **dissatisfied (low rating)** and **didn’t reuse** the tool revealed areas for improvement.
-- A high count of students who **used the AI again** reflects a strong satisfaction and trust in the tool.
-- By analyzing **average session duration** and **prompt counts**, we gained insight into typical engagement behavior.
-- Sorting sessions by satisfaction helped us highlight **top-performing use cases**.
-- Sessions grouped by discipline revealed which academic fields are **early adopters of AI tools**.
+- Discover which students benefit the most from the AI assistant  
+- Understand typical usage behavior  
+- Identify areas for improvement  
 
 ---
 
-## ✅ What I Gained from This Project  
+## 📊 Dataset Description
 
-- Strengthened my **SQL skills** through real data exploration and problem-solving  
-- Learned how to apply data analysis to **understand user behavior and product performance**  
-- Practiced converting raw usage data into **clear, actionable insights**  
-- Developed the ability to communicate findings in a way that supports **product improvement and decision-making**
+The dataset columns are as follows:
+
+| Column Name         | Description                                                   |
+|---------------------|---------------------------------------------------------------|
+| StudentLevel        | Level of student (Undergraduate, Graduate, or High School)    |
+| Discipline          | Student's academic field (e.g., Computer Science, Psychology) |
+| TaskType            | Task category (e.g., Writing, Coding, Brainstorming)          |
+| SessionLengthMin    | Duration of the session in minutes                            |
+| TotalPrompts        | Number of prompts used during the session                     |
+| AI_AssistanceLevel  | User rating of AI helpfulness (1 to 5)                        |
+| FinalOutcome        | Session result (e.g., Assignment Completed, Idea Drafted)     |
+| SatisfactionRating  | How satisfied the user was (1 to 5)                           |
+| UsedAgain           | Did the user reuse the tool? (1 = Yes, 0 = No)                |
+
+---
+
+## 🧠 SQL-Based Analysis & Insights
+
+### 1 - What types of tasks are most common?
+```sql
+SELECT TaskType, COUNT(*) AS frequency
+FROM ai_usage
+GROUP BY TaskType
+ORDER BY frequency DESC
+```
+> Writing and Studying were the most frequently performed tasks.
+
+---
+
+### 2 - Who are the most engaged users?
+```sql
+SELECT Discipline, StudentLevel, AVG(SessionLengthMin) AS avgSession, 
+AVG(SatisfactionRating) AS avgSatisfaction
+FROM ai_usage
+GROUP BY Discipline, StudentLevel
+ORDER BY avgSession DESC, avgSatisfaction DESC
+```
+> Graduate students in Computer Science consistently had longer and more satisfying sessions.
+
+---
+
+### 3 - Do longer sessions result in more productive outcomes?
+```sql
+SELECT FinalOutcome, COUNT(*) AS count, AVG(SessionLengthMin) AS avgDuration
+FROM ai_usage
+GROUP BY FinalOutcome
+ORDER BY avgDuration DESC
+```
+> "Assignment Completed" was most common in long sessions, suggesting deeper academic engagement.
+
+---
+
+### 4 - How helpful was the AI across disciplines?
+```sql
+SELECT Discipline, COUNT(*) AS helpfulSessions
+FROM ai_usage
+WHERE AI_AssistanceLevel > 4
+GROUP BY Discipline
+ORDER BY helpfulSessions DESC
+```
+> History and Biology disciplines reported the highest satisfaction with AI support.
+
+---
+
+### 5 - Which tasks often result in "Idea Drafted" outcomes?
+```sql
+SELECT TaskType, COUNT(*) AS totalSessions, AVG(TotalPrompts) AS avgPrompts
+FROM ai_usage
+WHERE FinalOutcome = 'Idea Drafted'
+GROUP BY TaskType
+ORDER BY totalSessions DESC
+```
+> Brainstorming and Writing had the highest idea drafting rate.
+
+---
+
+### 6 - Which student level uses the AI for the longest average time?
+```sql
+SELECT StudentLevel, AVG(SessionLengthMin) AS avgTime
+FROM ai_usage
+GROUP BY StudentLevel
+```
+> Graduate students tend to engage in longer sessions.
+
+---
+
+### 7 - What percentage of users reused the tool?
+```sql
+SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM ai_usage) AS reuseRate
+FROM ai_usage
+WHERE UsedAgain = 1
+```
+> A high reuse rate (~70%) reflects overall trust in the tool.
+
+---
+
+### 8 - What is the satisfaction range?
+```sql
+SELECT MAX(SatisfactionRating) AS maxRating,
+       MIN(SatisfactionRating) AS minRating
+FROM ai_usage
+```
+> Ratings varied from 1 (very unsatisfied) to 5 (very satisfied).
+
+---
+
+### 9 - Which academic fields are most active?
+```sql
+SELECT Discipline, COUNT(*) AS sessionCount, AVG(SatisfactionRating) AS avgSatisfaction
+FROM ai_usage
+GROUP BY Discipline
+ORDER BY sessionCount DESC
+```
+> Computer Science and Biology had the highest session counts and engagement.
+
+---
+
+### 10 - Which task types involve more back-and-forth prompts?
+```sql
+SELECT TaskType, AVG(TotalPrompts) AS avgPrompts
+FROM ai_usage
+GROUP BY TaskType
+ORDER BY avgPrompts DESC
+```
+> Coding and Brainstorming tasks involved higher prompt exchanges.
+
+---
+
+### 11 - Are there weak points? (Low satisfaction, no return)
+```sql
+SELECT *
+FROM ai_usage
+WHERE SatisfactionRating < 2 AND UsedAgain = 0
+```
+> Identified users who were dissatisfied and never returned  ~ (3.43%)
+
+---
+
+### 12 - Assignment Completion Rate
+```sql
+SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM ai_usage) AS completionRate
+FROM ai_usage
+WHERE FinalOutcome = 'Assignment Completed'
+```
+> Around 48% of all sessions led to a completed assignment, which means that AI is mostly used as a helping tool rather than being totally depended on
+
+
+
+---
+
+### 13 - Top Disciplines by AI Support Rating
+```sql
+SELECT Discipline, AVG(AI_AssistanceLevel) AS avgAiAssistance
+FROM ai_usage
+GROUP BY Discipline
+ORDER BY avgAiAssistance DESC
+```
+> Psychology students consistently rated AI assistance the highest.
+
+---
+
+## ✅ What I Learned from This Project
+
+- I improved my SQL skills with real-life data challenges.  
+- I learned how to investigate user behavior through structured analysis.  
+- I practiced transforming data into simple business insights.  
+- I understood how to detect product strengths and weaknesses.  
+
+---
+
+📌 **Conclusion:**  
+This project provided a complete SQL-driven journey from problem definition to business impact, and confirmed how AI can be valuable for students when used effectively.
