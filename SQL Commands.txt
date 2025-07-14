@@ -1,0 +1,74 @@
+-- 1 - What types of tasks are most common?
+ SELECT TaskType, COUNT(*) AS frequency
+ FROM ai_usage
+ GROUP BY TaskType
+ ORDER BY frequency DESC
+
+ --  2 - Who are the most engaged users?
+ SELECT Discipline, StudentLevel, AVG(SessionLengthMin) AS avgSession, AVG(SatisfactionRating) as avgSatisfaction
+ FROM ai_usage
+ GROUP BY Discipline, StudentLevel
+ ORDER BY avgSession DESC, avgSatisfaction DESC
+
+ --  3 - Do longer sessions result in more productive outcomes?
+ SELECT FinalOutcome, COUNT(*) AS count, AVG(SessionLengthMin) AS avgDuration
+ FROM ai_usage
+ GROUP BY FinalOutcome
+ ORDER BY avgDuration DESC
+
+ --  4 - How helpful was the AI across disciplines?
+ SELECT Discipline, COUNT(*) AS helpfulSessions
+ FROM ai_usage
+ WHERE AI_AssistanceLevel > 4
+ GROUP BY Discipline
+ ORDER BY helpfulSessions DESC
+
+ --  5 - Which tasks often result in "Idea Drafted" outcomes?
+ SELECT TaskType, COUNT(*) AS totalSessions, AVG(TotalPrompts) AS avgPrompts
+ FROM ai_usage
+ WHERE FinalOutcome = 'Idea Drafted'
+ GROUP BY TaskType
+ ORDER BY totalSessions DESC
+
+ --  6 - Which student level uses the AI for the longest average time?
+ SELECT StudentLevel, AVG(SessionLengthMin) AS avgTime
+ FROM ai_usage
+ GROUP BY StudentLevel
+
+ -- 7 - What percentage of users reused the tool?
+ SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM ai_usage) AS reuseRate
+ FROM ai_usage
+ WHERE UsedAgain = 1
+
+ -- 8 - What is the satisfaction range?
+ SELECT MAX(SatisfactionRating) AS maxRating,
+ MIN(SatisfactionRating) AS minRating
+ FROM ai_usage
+
+ -- 9 - Which academic fields are most active?
+ SELECT Discipline, COUNT(*) AS sessionCount, AVG(SatisfactionRating) AS avgSatisfaction
+ FROM ai_usage
+ GROUP BY Discipline
+ ORDER BY sessionCount DESC
+
+ -- 10 - Which task types involve more back-and-forth prompts?
+ SELECT TaskType, AVG(TotalPrompts) AS avgPrompts
+ FROM ai_usage
+ GROUP BY TaskType
+ ORDER BY avgPrompts DESC
+
+ -- 11 - Are there weak points? (Low satisfaction, no return)
+ SELECT * FROM ai_usage
+ WHERE SatisfactionRating < 2 AND UsedAgain = 0
+
+ -- 12 - Assignment Completion Rate
+ SELECT COUNT(*) * 100.0 / (SELECT COUNT(*) FROM ai_usage) AS completionRate
+ FROM ai_usage
+ WHERE FinalOutcome = 'Assignment Completed'
+
+  -- 13 - Top Disciplines by AI Support Rating
+ SELECT Discipline, AVG(AI_AssistanceLevel) AS avgAiAssistance
+ FROM ai_usage
+ GROUP BY Discipline
+ ORDER BY avgAiAssistance DESC
+
