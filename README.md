@@ -1,6 +1,6 @@
-#  AI Assistant Usage Behavior Analysis 
+#  AI Assistant Usage Behavior Analysis
 
-## 👨‍💻 Project by: Omar Medhat 
+## 👨‍💻 Project by: Omar Medhat
 
 ---
 
@@ -49,7 +49,7 @@ ORDER BY frequency DESC
 
 ### 2 - Who are the most engaged users?
 ```sql
-SELECT Discipline, StudentLevel, AVG(SessionLengthMin) AS avgSession, 
+SELECT Discipline, StudentLevel, AVG(SessionLengthMin) AS avgSession,
 AVG(SatisfactionRating) AS avgSatisfaction
 FROM ai_usage
 GROUP BY Discipline, StudentLevel
@@ -179,14 +179,18 @@ ORDER BY avgAiAssistance DESC
 
 ---
 
-## ✅ What I Learned from This Project
-
-- I improved my SQL skills with real-life data challenges.  
-- I learned how to investigate user behavior through structured analysis.  
-- I practiced transforming data into simple business insights.  
-- I understood how to detect product strengths and weaknesses.  
-
----
-
 📌 **Conclusion:**  
-This project provided a complete SQL-driven journey from problem definition to business impact, and confirmed how AI can be valuable for students when used effectively.
+After analyzing data from over **10,000 AI sessions**, several key insights were discovered:
+
+- **Writing** and **Studying** were the most common tasks, showing that users often turn to AI for content creation and academic support.
+- **Graduate students in Computer Science** were the most engaged — spending more time per session and reporting higher satisfaction.
+- **Longer sessions** often led to better outcomes, such as **completed assignments**, indicating that deeper interaction with AI boosts productivity.
+- Students in **History** and **Biology** reported higher satisfaction, possibly because AI is helpful in tasks that involve reading and summarizing.
+- Tasks like **Brainstorming** and **Writing** frequently ended with ideas being drafted, showing AI’s role in helping users organize and start their thoughts.
+- Around **70% of users reused the tool**, which reflects a strong level of **trust and usefulness**.
+- A small group (~**3.4%**) reported low satisfaction and didn’t return, pointing to opportunities for improving the user experience.
+- About **48% of sessions** ended with an assignment being completed, which means AI is **mainly used as a support tool** — helping users without replacing their effort.
+
+> 💡 In short, AI proves to be a valuable assistant for students, especially in tasks that require thinking and writing. It plays an important role in academic projects — **used as a smart aid**, but not fully depended on.
+
+
